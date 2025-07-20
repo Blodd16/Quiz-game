@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Programming Quiz</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #f0f0f0;
+    margin: 0; padding: 0;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh;
+  }
+  #quiz-container {
+    background: #1f2a36;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 20px;
+    color: #4fc3f7;
+  }
+  .question {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+  }
+  .options li {
+    background: #324a5f;
+    margin: 8px 0;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+    font-size: 1.1rem;
+  }
+  .options li:hover {
+    background: #4fc3f7;
+    color: #0f2027;
+  }
+  .options li.selected {
+    background: #f57c00;
+    color: white;
+    font-weight: bold;
+  }
+  button {
+    background: #4fc3f7;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #0f2027;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #039be5;
+  }
+  #result {
+    font-size: 1.4rem;
+    margin-top: 20px;
+    color: #80deea;
+  }
+</style>
+</head>
+<body>
+
+<div id="quiz-container">
+  <h1>Programming Quiz</h1>
+  <div id="question-container">
+    <div id="question" class="question"></div>
+    <ul id="options" class="options"></ul>
+    <button id="next-btn" disabled>Next</button>
+  </div>
+  <div id="result" style="display:none;"></div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "What does HTML stand for?",
+      options: ["HyperText Markup Language", "Hyper Trainer Marking Language", "HighText Markdown Language", "Hyperlink and Text Markup Language"],
+      answer: "HyperText Markup Language"
+    },
+    {
+      question: "Which programming language is primarily used for iOS development?",
+      options: ["Java", "Swift", "C#", "Kotlin"],
+      answer: "Swift"
+    },
+    {
+      question: "What does the acronym API stand for?",
+      options: ["Application Programming Interface", "Applied Program Interface", "Advanced Programming Instruction", "Application Process Input"],
+      answer: "Application Programming Interface"
+    },
+    {
+      question: "Which language is known for its use in data science and machine learning?",
+      options: ["Python", "JavaScript", "Ruby", "PHP"],
+      answer: "Python"
+    },
+    {
+      question: "What does CSS stand for?",
+      options: ["Cascading Style Sheets", "Creative Style Syntax", "Computer Styled Sections", "Control Style Sheet"],
+      answer: "Cascading Style Sheets"
+    },
+    {
+      question: "What symbol is used to denote an ID in CSS?",
+      options: ["#", ".", "$", "*"],
+      answer: "#"
+    },
+    {
+      question: "What is Git primarily used for?",
+      options: ["Version control", "Game development", "Machine learning", "Web hosting"],
+      answer: "Version control"
+    },
+    {
+      question: "Which of the following is NOT a relational database?",
+      options: ["MongoDB", "PostgreSQL", "MySQL", "SQLite"],
+      answer: "MongoDB"
+    },
+    {
+      question: "Which HTTP method is used to update a resource?",
+      options: ["PUT", "GET", "DELETE", "HEAD"],
+      answer: "PUT"
+    },
+    {
+      question: "Which language runs in a web browser?",
+      options: ["Java", "C", "Python", "JavaScript"],
+      answer: "JavaScript"
+    }
+  ];
+
+  const questionEl = document.getElementById('question');
+  const optionsEl = document.getElementById('options');
+  const nextBtn = document.getElementById('next-btn');
+  const resultEl = document.getElementById('result');
+
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let selectedOption = null;
+
+  function loadQuestion() {
+    selectedOption = null;
+    nextBtn.disabled = true;
+    optionsEl.innerHTML = '';
+    const currentQuestion = quizData[currentQuestionIndex];
+    questionEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+    currentQuestion.options.forEach(option => {
+      const li = document.createElement('li');
+      li.textContent = option;
+      li.addEventListener('click', () => {
+        if(selectedOption) selectedOption.classList.remove('selected');
+        selectedOption = li;
+        li.classList.add('selected');
+        nextBtn.disabled = false;
+      });
+      optionsEl.appendChild(li);
+    });
+  }
+
+  nextBtn.addEventListener('click', () => {
+    const answer = quizData[currentQuestionIndex].answer;
+    if(selectedOption && selectedOption.textContent === answer) {
+      score++;
+    }
+    currentQuestionIndex++;
+    if(currentQuestionIndex < quizData.length) {
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  });
+
+  function showResult() {
+    questionEl.style.display = 'none';
+    optionsEl.style.display = 'none';
+    nextBtn.style.display = 'none';
+    resultEl.style.display = 'block';
+    resultEl.textContent = `Your Score: ${score} / ${quizData.length} 🎉`;
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
